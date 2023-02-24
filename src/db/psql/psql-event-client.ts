@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { EventDto } from 'src/event/dto/event.dt';
 import { EventApi } from '../event-api';
-import { EventModel } from '../model/event-model';
 import { PsqlClient } from './psql-client';
-
 
 @Injectable()
 export class PsqlEventClient extends PsqlClient implements EventApi {
- async  save(eventDto: EventDto): Promise<EventModel> {
-    const result = await this.psqlClient`
+  async save(eventDto: EventDto): Promise<EventDto> {
+    const [psqlResult] = await this.psqlClient`
         insert into events (
           payload, event_name
         ) values (
@@ -17,7 +15,13 @@ export class PsqlEventClient extends PsqlClient implements EventApi {
       
         returning *
       `;
-    console.log(JSON.stringify(result));
-    return null;
+    const eventResult: EventDto = {
+      id: psqlResult.id,
+      payload: psqlResult.payload,
+      name: psqlResult.event_name,
+      createdAt: psqlResult.created_at
+      
+    };
+    return eventResult;
   }
 }

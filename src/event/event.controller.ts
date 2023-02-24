@@ -7,8 +7,9 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Post('create')
-  createSalesOrder(@Body() event: EventDto): EventDto {
-    this.eventService.save(event);
-    return null;
+  async createSalesOrder(@Body() event: EventDto): Promise<EventDto> {
+    console.log("Received ");
+    console.log(JSON.stringify(event));
+    return await this.eventService.save(event);
   }
 }

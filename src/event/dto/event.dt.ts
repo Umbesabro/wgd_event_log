@@ -1,4 +1,6 @@
 export class EventDto {
-    payload: any;
-    name: string;
+  id?: number;
+  payload: any;
+  name: string;
+  createdAt: Date;
 }
